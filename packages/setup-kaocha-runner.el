@@ -31,12 +31,11 @@
          (kaocha-runner--testable-sym (cider-current-ns) nil nil)
          nil t)
       (let ((original-buffer (current-buffer)))
-        (save-window-excursion
-          (when-let ((file (kaocha-runner--significant-other-find-existing-test)))
-            (find-file file)
-            (kaocha-runner--run-tests
-             (kaocha-runner--testable-sym (cider-current-ns) nil nil)
-             nil t original-buffer)))))))
+        (when-let ((file (kaocha-runner--significant-other-find-existing-test)))
+          (with-current-buffer (find-file-noselect file)
+           (kaocha-runner--run-tests
+            (kaocha-runner--testable-sym (cider-current-ns) nil nil)
+            nil t original-buffer)))))))
 
 (add-hook 'cider-file-loaded-hook #'kaocha-runner-run-relevant-tests)
 
