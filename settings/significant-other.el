@@ -26,10 +26,11 @@
 (defun significant-other-jump-to (relation arg)
   (if-let (file (significant-other-find-existing relation))
       (find-file file)
-    (when-let (file (car (funcall (significant-other-get-find-fn relation))))
-      (if arg
-          (progn (find-file file) (save-buffer))
-        (ido-find-file-in-dir (file-name-directory file))))))
+    (if-let (file (car (funcall (significant-other-get-find-fn relation))))
+        (if arg
+            (progn (find-file file) (save-buffer))
+          (ido-find-file-in-dir (file-name-directory file)))
+      (message "This file is not configured for %s" relation))))
 
 (defmacro with-significant-others (relation binding &rest mappings)
   (declare (indent 2))
